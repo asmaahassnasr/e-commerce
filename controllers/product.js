@@ -3,13 +3,34 @@ const Product = require('../models/product');
 const formidable = require('formidable');
 const _ = require('lodash');
 const fs = require('fs');
+
+exports.productById = (req, res, next , id) => {
+    Product.findById(id).exec( (err, product) =>{
+        if(err || !product){
+            return res.status(400).
+            json({error:"Product not found"});
+        }
+        req.product = product;
+        next();
+    });
+};
+
+
+exports.read = (req,res) =>{
+    //dont send photo in each request because of big size
+    req.product.photo = undefined;
+    return res.json(req.product);
+}
+
+
 exports.create = (req , res) => {
     let form = new formidable.IncomingForm(); // all available data here
     form.keepExtensions = true; // All Extensions
     form.parse(req, (err, fields,files) =>{
         
         if(err) {
-            return res.status(400).json({error:"Iamge could not be uploaded"});
+            return res.status(400).
+            json({error:"Iamge could not be uploaded"});
         }
 
         const {name, description,price,category,quantity,shipping} = fields;
