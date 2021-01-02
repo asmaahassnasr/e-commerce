@@ -53,3 +53,19 @@ exports.signout = (req, res ) =>{
     res.clearCookie('t');
     res.json({message:"SignOut Success"});
 }
+
+exports.isAuth = (req,res,next) =>{
+    //If there is a user and authorized as current user 
+    let user = req.profile && req.auth && req.profile._id == req.auth._id;
+    if(!user) {
+        return res.status(403).json({error:"Access Denied"});
+    }
+    next();
+}
+
+exports.isAdmin = (req , res , next) => {
+    if(req.profile.role === 0){
+        return res.status(403).json({error:"Admin resources access denied"});
+    }
+    next();
+}
