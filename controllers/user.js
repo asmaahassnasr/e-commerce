@@ -42,6 +42,12 @@ exports.signin =(req,res) =>{
     })
 }
 
+exports.requireSignin = expressJwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ["HS256"], // added later,
+    userProperty: "auth",
+  });
+
 exports.signout = (req, res ) =>{
     //clear cookie response
     res.clearCookie('t');
