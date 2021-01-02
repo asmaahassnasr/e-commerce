@@ -167,3 +167,15 @@ exports.listRelated = (req , res) =>{
     })
 }
 
+
+//Get All Categories wich have a products related to it 
+
+exports.listCategories = (req,res) =>{
+    Product.distinct("category", {}, (err , categories) => {
+        if(err) {
+            return res.status(400).
+            json({error: "Products not found"});
+        }
+        res.json(categories);
+    })
+}
